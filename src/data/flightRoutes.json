@@ -1,0 +1,46 @@
+{
+  "routes": [
+    {
+      "id": "route-01",
+      "name": "校园全景巡游",
+      "description": "从高空俯瞰河大明伦校区全景",
+      "duration": 40,
+      "waypoints": [
+        { "longitude": 114.348, "latitude": 34.7908, "height": 1200, "heading": 180, "pitch": -60, "duration": 6 },
+        { "longitude": 114.348, "latitude": 34.7908, "height": 1200, "heading": 270, "pitch": -60, "duration": 4 },
+        { "longitude": 114.348, "latitude": 34.7872, "height": 800, "heading": 0, "pitch": -45, "duration": 8 },
+        { "longitude": 114.348, "latitude": 34.7872, "height": 800, "heading": 90, "pitch": -45, "duration": 4 },
+        { "longitude": 114.3476, "latitude": 34.7886, "height": 400, "heading": 0, "pitch": -40, "duration": 6 },
+        { "longitude": 114.3492, "latitude": 34.7886, "height": 400, "heading": 270, "pitch": -40, "duration": 6 },
+        { "longitude": 114.3482, "latitude": 34.7890, "heading": 180, "height": 300, "pitch": -30, "duration": 6 }
+      ]
+    },
+    {
+      "id": "route-02",
+      "name": "南大门→大礼堂→图书馆",
+      "description": "沿中轴线依次参观三大地标",
+      "duration": 30,
+      "waypoints": [
+        { "longitude": 114.3476, "latitude": 34.7880, "height": 100, "heading": 0, "pitch": -15, "duration": 4 },
+        { "longitude": 114.3476, "latitude": 34.7883, "height": 80, "heading": 0, "pitch": -20, "duration": 6 },
+        { "longitude": 114.3477, "latitude": 34.7890, "height": 120, "heading": 0, "pitch": -25, "duration": 8 },
+        { "longitude": 114.3487, "latitude": 34.7887, "height": 150, "heading": 90, "pitch": -30, "duration": 6 },
+        { "longitude": 114.3480, "latitude": 34.7892, "height": 200, "heading": 270, "pitch": -40, "duration": 6 }
+      ]
+    },
+    {
+      "id": "route-03",
+      "name": "教学区与生活区",
+      "description": "游览教学区、宿舍区、运动区",
+      "duration": 35,
+      "waypoints": [
+        { "longitude": 114.3472, "latitude": 34.7892, "height": 300, "heading": 90, "pitch": -45, "duration": 5 },
+        { "longitude": 114.3485, "latitude": 34.7888, "height": 250, "heading": 180, "pitch": -40, "duration": 8 },
+        { "longitude": 114.3480, "latitude": 34.7898, "height": 200, "heading": 270, "pitch": -35, "duration": 7 },
+        { "longitude": 114.3465, "latitude": 34.7893, "height": 200, "heading": 0, "pitch": -30, "duration": 5 },
+        { "longitude": 114.3492, "latitude": 34.7872, "height": 300, "heading": 135, "pitch": -50, "duration": 5 },
+        { "longitude": 114.3494, "latitude": 34.7870, "height": 350, "heading": 0, "pitch": -55, "duration": 5 }
+      ]
+    }
+  ]
+}

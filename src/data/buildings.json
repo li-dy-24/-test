@@ -1,0 +1,392 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "campus": "河南大学明伦校区",
+    "city": "开封市",
+    "center": [114.348, 34.789],
+    "totalArea": "约 120 公顷",
+    "description": "河南大学明伦校区位于开封市顺河回族区明伦街85号，始建于1912年，是中国近代高等教育发源地之一。"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "building-01",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3475,34.7882],[114.3478,34.7882],[114.3478,34.7884],[114.3475,34.7884],[114.3475,34.7882]]]
+      },
+      "properties": {
+        "name": "河南大学南大门",
+        "type": "landmark",
+        "floors": 2,
+        "height": 15,
+        "area": "约 800 m²",
+        "built": "1936年",
+        "style": "中国传统宫殿式建筑",
+        "description": "河南大学标志性建筑，全国重点文物保护单位，中国传统宫殿式大门建筑，见证百年河大历史。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-02",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3476,34.7888],[114.3482,34.7888],[114.3482,34.7892],[114.3476,34.7892],[114.3476,34.7888]]]
+      },
+      "properties": {
+        "name": "大礼堂",
+        "type": "landmark",
+        "floors": 3,
+        "height": 24,
+        "area": "约 3,500 m²",
+        "built": "1934年",
+        "style": "中西合璧宫殿式",
+        "description": "全国重点文物保护单位，河南大学的精神象征。中西合璧的宫殿式建筑，可容纳3000人，是学校举行重要典礼和演出活动的核心场所。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-03",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3485,34.7885],[114.3490,34.7885],[114.3490,34.7889],[114.3485,34.7889],[114.3485,34.7885]]]
+      },
+      "properties": {
+        "name": "图书馆",
+        "type": "library",
+        "floors": 7,
+        "height": 35,
+        "area": "约 18,000 m²",
+        "built": "2005年",
+        "style": "现代建筑风格",
+        "description": "河南大学主图书馆，藏书超过400万册，设有电子阅览室、自习区、学术报告厅，是师生学习研究的核心场所。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-04",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3473,34.7890],[114.3476,34.7890],[114.3476,34.7894],[114.3473,34.7894],[114.3473,34.7890]]]
+      },
+      "properties": {
+        "name": "综合教学楼",
+        "type": "teaching",
+        "floors": 6,
+        "height": 28,
+        "area": "约 12,000 m²",
+        "built": "2008年",
+        "style": "现代风格",
+        "description": "主要承担人文社科类课程教学任务，内设多媒体教室80余间、学术报告厅2个，是日常教学活动的核心场所。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-05",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3491,34.7891],[114.3495,34.7891],[114.3495,34.7895],[114.3491,34.7895],[114.3491,34.7891]]]
+      },
+      "properties": {
+        "name": "理科实验楼",
+        "type": "teaching",
+        "floors": 5,
+        "height": 25,
+        "area": "约 10,000 m²",
+        "built": "2012年",
+        "style": "现代风格",
+        "description": "物理、化学、生物等理科实验教学中心，配备标准化实验室、精密仪器室和科研工作站。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-06",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3478,34.7895],[114.3482,34.7895],[114.3482,34.7899],[114.3478,34.7899],[114.3478,34.7895]]]
+      },
+      "properties": {
+        "name": "逸夫科技楼",
+        "type": "teaching",
+        "floors": 8,
+        "height": 36,
+        "area": "约 15,000 m²",
+        "built": "2010年",
+        "style": "现代建筑",
+        "description": "邵逸夫基金会捐建，集计算机中心、GIS实验室、遥感数据处理中心、多媒体制作中心于一体。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-07",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3472,34.7884],[114.3473,34.7884],[114.3473,34.7887],[114.3472,34.7887],[114.3472,34.7884]]]
+      },
+      "properties": {
+        "name": "行政办公楼",
+        "type": "admin",
+        "floors": 5,
+        "height": 22,
+        "area": "约 6,000 m²",
+        "built": "1998年",
+        "style": "现代风格",
+        "description": "学校行政办公中心，校长办公室、教务处、学生处、研究生院等核心行政部门所在地。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-08",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3488,34.7878],[114.3490,34.7878],[114.3490,34.7881],[114.3488,34.7881],[114.3488,34.7878]]]
+      },
+      "properties": {
+        "name": "学生活动中心",
+        "type": "admin",
+        "floors": 3,
+        "height": 16,
+        "area": "约 4,000 m²",
+        "built": "2003年",
+        "style": "现代风格",
+        "description": "学生社团活动、文艺演出、就业指导、心理咨询等综合服务场所，是校园文化生活的重要阵地。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-09",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3496,34.7876],[114.3498,34.7876],[114.3498,34.7880],[114.3496,34.7880],[114.3496,34.7876]]]
+      },
+      "properties": {
+        "name": "体育馆",
+        "type": "sports",
+        "floors": 2,
+        "height": 18,
+        "area": "约 8,000 m²",
+        "built": "2007年",
+        "style": "现代体育建筑",
+        "description": "室内综合体育馆，可容纳3000名观众，设有篮球场、羽毛球场、乒乓球区及健身中心。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-10",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3492,34.7868],[114.3497,34.7868],[114.3497,34.7872],[114.3492,34.7872],[114.3492,34.7868]]]
+      },
+      "properties": {
+        "name": "体育场",
+        "type": "sports",
+        "floors": 1,
+        "height": 5,
+        "area": "约 20,000 m²",
+        "built": "2005年",
+        "style": "标准田径场",
+        "description": "标准400米田径跑道+足球场，周边配有篮球场8个、排球场4个，承办校运会及各类体育活动。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-11",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3468,34.7895],[114.3470,34.7895],[114.3470,34.7899],[114.3468,34.7899],[114.3468,34.7895]]]
+      },
+      "properties": {
+        "name": "学生宿舍1号楼",
+        "type": "dormitory",
+        "floors": 7,
+        "height": 24,
+        "area": "约 3,000 m²",
+        "built": "2009年",
+        "style": "现代公寓式",
+        "description": "男生宿舍楼，标准四人间，独立卫浴，空调暖气齐全，每层配有公共洗衣房和自习室。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-12",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3465,34.7895],[114.3467,34.7895],[114.3467,34.7899],[114.3465,34.7899],[114.3465,34.7895]]]
+      },
+      "properties": {
+        "name": "学生宿舍2号楼",
+        "type": "dormitory",
+        "floors": 7,
+        "height": 24,
+        "area": "约 3,000 m²",
+        "built": "2010年",
+        "style": "现代公寓式",
+        "description": "女生宿舍楼，标准四人间，配有独立阳台、空调、热水系统，楼下设有快递驿站和便利店。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-13",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3463,34.7891],[114.3465,34.7891],[114.3465,34.7894],[114.3463,34.7894],[114.3463,34.7891]]]
+      },
+      "properties": {
+        "name": "学生宿舍3号楼",
+        "type": "dormitory",
+        "floors": 7,
+        "height": 24,
+        "area": "约 2,800 m²",
+        "built": "2011年",
+        "style": "现代公寓式",
+        "description": "研究生宿舍楼，二人间配置，独立卫浴加小客厅，为研究生提供舒适的居住环境。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-14",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3465,34.7884],[114.3467,34.7884],[114.3467,34.7887],[114.3465,34.7887],[114.3465,34.7884]]]
+      },
+      "properties": {
+        "name": "学生第一食堂",
+        "type": "cafeteria",
+        "floors": 2,
+        "height": 12,
+        "area": "约 2,500 m²",
+        "built": "2006年",
+        "style": "现代建筑",
+        "description": "校园北部主要餐饮场所，一层为大众餐厅，二层为风味小吃和清真餐厅，可同时容纳1500人就餐。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-15",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3488,34.7874],[114.3490,34.7874],[114.3490,34.7877],[114.3488,34.7877],[114.3488,34.7874]]]
+      },
+      "properties": {
+        "name": "学生第二食堂",
+        "type": "cafeteria",
+        "floors": 3,
+        "height": 15,
+        "area": "约 3,000 m²",
+        "built": "2015年",
+        "style": "现代建筑",
+        "description": "校园南部餐饮中心，三层楼分别提供中餐、西餐和地方特色美食，设有咖啡厅和外卖窗口。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-16",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3482,34.7901],[114.3485,34.7901],[114.3485,34.7904],[114.3482,34.7904],[114.3482,34.7901]]]
+      },
+      "properties": {
+        "name": "环境与规划学院楼",
+        "type": "teaching",
+        "floors": 5,
+        "height": 24,
+        "area": "约 7,000 m²",
+        "built": "2013年",
+        "style": "现代建筑",
+        "description": "环境科学、地理信息科学、城乡规划等专业教学科研场所，配备GIS实验室、遥感数据处理机房、环境监测实验室。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-17",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3470,34.7901],[114.3473,34.7901],[114.3473,34.7904],[114.3470,34.7904],[114.3470,34.7901]]]
+      },
+      "properties": {
+        "name": "生命科学学院楼",
+        "type": "teaching",
+        "floors": 4,
+        "height": 20,
+        "area": "约 6,000 m²",
+        "built": "2004年",
+        "style": "现代建筑",
+        "description": "生物科学、生物工程专业教学科研基地，拥有省级重点实验室、标本馆和植物组织培养室。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-18",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3479,34.7879],[114.3481,34.7879],[114.3481,34.7882],[114.3479,34.7882],[114.3479,34.7879]]]
+      },
+      "properties": {
+        "name": "校医院",
+        "type": "admin",
+        "floors": 3,
+        "height": 14,
+        "area": "约 2,000 m²",
+        "built": "2000年",
+        "style": "现代风格",
+        "description": "为全校师生提供基本医疗服务，设有内科、外科、口腔科、中医科，配有急诊室和观察病房。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-19",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3493,34.7900],[114.3496,34.7900],[114.3496,34.7903],[114.3493,34.7903],[114.3493,34.7900]]]
+      },
+      "properties": {
+        "name": "留学生公寓",
+        "type": "dormitory",
+        "floors": 6,
+        "height": 22,
+        "area": "约 3,500 m²",
+        "built": "2016年",
+        "style": "现代国际化风格",
+        "description": "国际留学生住宿中心，配有独立厨房、公共交流空间、语言学习室，目前住有来自30多个国家的留学生。",
+        "image": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "building-20",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3473,34.7877],[114.3475,34.7877],[114.3475,34.7880],[114.3473,34.7880],[114.3473,34.7877]]]
+      },
+      "properties": {
+        "name": "校史馆",
+        "type": "landmark",
+        "floors": 2,
+        "height": 14,
+        "area": "约 1,500 m²",
+        "built": "2002年",
+        "style": "仿古建筑",
+        "description": "展示河南大学自1912年建校以来的百年发展历程，收藏历史文物、照片、文献等珍贵校史资料。",
+        "image": ""
+      }
+    }
+  ]
+}
