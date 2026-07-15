@@ -30,7 +30,6 @@ npm install
 # 2. 配置 Cesium ion Token
 cp .env.example .env
 # 编辑 .env，将 VITE_CESIUM_TOKEN 替换为你的 Token
-# 免费注册: https://ion.cesium.com
 
 # 3. 启动开发服务器
 npm run dev
