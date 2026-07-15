@@ -128,8 +128,36 @@ git push -u origin main
 
 ## 当前状态
 
-- ✅ 代码已提交（2 个 commit）
+- ✅ 代码已提交（3 个 commit）
 - ✅ .gitignore 保护 Token 不泄露
 - ✅ .env.example 供他人配置
 - ✅ README.md 项目文档就绪
-- ⏳ 待解决凭证问题后推送
+- ✅ 已推送至 https://github.com/li-dy-24/-test
+
+## 最终成功的推送命令
+
+在 PowerShell 中执行（代理 127.0.0.1:7897 可用时）：
+
+```powershell
+cd C:\Users\29530\WorkBuddy\2026-07-09-17-38-54\digital-campus-3d
+$env:HTTPS_PROXY="http://127.0.0.1:7897"
+$env:HTTP_PROXY="http://127.0.0.1:7897"
+git push -f origin main
+```
+
+### 失败路径总结
+
+| 方法 | 结果 | 原因 |
+|------|------|------|
+| SSH（无 agent） | ❌ Permission denied | 公钥未上传 GitHub / agent 未启动 |
+| SSH（有 agent） | ❌ 需要交互 | 私钥有 passphrase |
+| HTTPS（无代理） | ❌ 连接超时 | 直连 GitHub 不通 |
+| HTTPS（git 代理 7890） | ❌ 连接拒绝 | 7890 端口代理未运行 |
+| HTTPS（env 代理 7897） | ✅ **成功** | PowerShell 设置环境变量 |
+
+### 关键教训
+
+1. **SSH passphrase ≠ 公钥指纹**：`SHA256:...` 是公钥指纹，passphrase 是创建密钥时自己设的密码
+2. **git config 代理 ≠ 环境变量代理**：两个是独立的，端口也可能不同（7890 vs 7897）
+3. **Bash `unset` 在 Git Bash 中可能不生效**：用 PowerShell 设置 `$env:HTTPS_PROXY` 更可靠
+4. **Token 用完要清 URL**：`git remote set-url origin git@github.com:...` 切回 SSH 避免 Token 泄露
