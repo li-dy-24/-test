@@ -1,4 +1,4 @@
-# 河南大学 · 数字校园三维展示系统
+# webgis数字校园三维展示系统
 
 Vue3 + Cesium 1.143 + OpenLayers 构建的 WebGIS 数字校园平台。
 
