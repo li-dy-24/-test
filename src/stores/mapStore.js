@@ -21,6 +21,18 @@ export const useMapStore = defineStore('map', () => {
     roll: 0
   })
 
+  // 相机实时读数（供底部状态条显示，不参与联动回写）
+  const cameraReadout = ref({
+    longitude: 114.348,
+    latitude: 34.789,
+    height: 10000,
+    heading: 0,
+    pitch: -60
+  })
+
+  // 二维地图指针位置（鼠标悬浮时显示）
+  const hoverCoord = ref(null)
+
   // 当前选中的建筑要素
   const selectedBuilding = ref(null)
 
@@ -47,6 +59,14 @@ export const useMapStore = defineStore('map', () => {
       const approxZoom = Math.max(13, Math.min(19, 19 - Math.log2(camera.height / 50)))
       olZoom.value = Math.round(approxZoom)
     }
+  }
+
+  function setCameraReadout(readout) {
+    cameraReadout.value = readout
+  }
+
+  function setHoverCoord(coord) {
+    hoverCoord.value = coord
   }
 
   function selectBuilding(building) {
@@ -77,12 +97,16 @@ export const useMapStore = defineStore('map', () => {
     olZoom,
     olRotation,
     cesiumCamera,
+    cameraReadout,
+    hoverCoord,
     selectedBuilding,
     syncEnabled,
     activeTool,
     toolParams,
     updateOLView,
     updateCesiumCamera,
+    setCameraReadout,
+    setHoverCoord,
     selectBuilding,
     clearSelection,
     setActiveTool,

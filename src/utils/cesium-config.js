@@ -12,6 +12,25 @@ export const CAMPUS_CENTER = {
   height: Number(import.meta.env.VITE_CAMPUS_HEIGHT) || 800
 }
 
+/**
+ * 默认 / 复位视角
+ * 把相机放在校园正南方约 8.5km、离地 8.5km 处，俯角 -45° 朝北看，
+ * 这样校园中心正好落在画面中央（若直接把相机放在校园正上方俯视，校园会被挤到画面下边缘外）。
+ */
+const HOME_RANGE = 12000
+const HOME_PITCH = -45
+const _rad = (Math.abs(HOME_PITCH) * Math.PI) / 180
+const _horiz = HOME_RANGE * Math.cos(_rad)      // 水平投影距离（米）
+const _vert = HOME_RANGE * Math.sin(_rad)       // 相机离地高度（米）
+
+export const HOME_VIEW = {
+  longitude: CAMPUS_CENTER.longitude,
+  latitude: CAMPUS_CENTER.latitude - _horiz / 111320, // 米 → 纬度差
+  height: _vert,
+  heading: 0,
+  pitch: HOME_PITCH
+}
+
 // 地形服务
 export const TERRAIN_PROVIDER_URL = 'https://assets.ion.cesium.com/asset_depot/1/CesiumWorldTerrain/v1.2/'
 

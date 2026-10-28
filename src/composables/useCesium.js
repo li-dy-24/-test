@@ -8,9 +8,14 @@
  */
 import { ref, reactive, onUnmounted } from 'vue'
 import * as Cesium from 'cesium'
-import { CESIUM_TOKEN, CAMPUS_CENTER } from '@/utils/cesium-config'
+import { CESIUM_TOKEN, CAMPUS_CENTER, HOME_VIEW } from '@/utils/cesium-config'
+import { useMapStore } from '@/stores/mapStore'
 
 export function useCesium() {
+  // 相机读数同步到全局 store（底部状态条）
+  const mapStore = useMapStore()
+  let lastReadoutAt = 0
+
   // ===== 响应式状态 =====
   const viewer = ref(null)         // Cesium.Viewer 实例
   const isReady = ref(false)       // Viewer 是否初始化完毕
@@ -63,33 +68,57 @@ export function useCesium() {
       navigationHelpButton: false,
       infoBox: false,
       selectionIndicator: false,
-      terrainProvider: terrain,
-      camera: {
-        destination: Cesium.Cartesian3.fromDegrees(
-          CAMPUS_CENTER.longitude,
-          CAMPUS_CENTER.latitude,
-          10000                // 初始 10km 高度俯瞰校园
-        ),
-        orientation: {
-          heading: Cesium.Math.toRadians(0),
-          pitch: Cesium.Math.toRadians(-60),
-          roll: 0
-        }
+      terrainProvider: terrain
+    })
+
+    // 显式设定初始视角
+    // 注意：Viewer 选项里的 camera 在指定 terrainProvider 时会被忽略（Cesium 1.12x 已知行为），
+    // 必须创建后手动 setView，否则会停在默认全球视角。
+    v.camera.setView({
+      destination: Cesium.Cartesian3.fromDegrees(
+        HOME_VIEW.longitude,
+        HOME_VIEW.latitude,
+        HOME_VIEW.height
+      ),
+      orientation: {
+        heading: Cesium.Math.toRadians(HOME_VIEW.heading),
+        pitch: Cesium.Math.toRadians(HOME_VIEW.pitch),
+        roll: 0
       }
     })
+
+    // 隐藏 Cesium ion 版权水印条
+    try {
+      if (v.cesiumWidget?.creditContainer) {
+        v.cesiumWidget.creditContainer.style.display = 'none'
+      }
+      const bottom = v.container?.querySelector('.cesium-viewer-bottom')
+      if (bottom) bottom.style.display = 'none'
+    } catch (e) {
+      console.warn('[Cesium] 版权条隐藏失败:', e.message)
+    }
 
     // 自定义 Home 按钮行为
     v.homeButton.viewModel.command.beforeExecute.addEventListener(e => {
       e.cancel = true
-      flyTo(CAMPUS_CENTER.longitude, CAMPUS_CENTER.latitude, 10000, 0, -60, 0, 2)
+      flyTo(
+        HOME_VIEW.longitude,
+        HOME_VIEW.latitude,
+        HOME_VIEW.height,
+        HOME_VIEW.heading,
+        HOME_VIEW.pitch,
+        0,
+        2
+      )
     })
 
     // 相机变化 → 更新 cameraState（供状态栏和 2D/3D 同步使用）
     v.camera.changed.addEventListener(() => updateCameraState())
+    updateCameraState()
 
     viewer.value = v
     isReady.value = true
-    console.log('[Cesium] ✅ Viewer 就绪，初始高度 10000m')
+    console.log('[Cesium] ✅ Viewer 就绪，默认视角已设为校园斜俯视图')
     return v
   }
 
@@ -106,6 +135,19 @@ export function useCesium() {
     cameraState.heading = Cesium.Math.toDegrees(cam.heading)
     cameraState.pitch = Cesium.Math.toDegrees(cam.pitch)
     cameraState.roll = Cesium.Math.toDegrees(cam.roll)
+
+    // 节流写入全局 store，供底部状态条消费（约 10 次/秒）
+    const now = performance.now()
+    if (now - lastReadoutAt > 100) {
+      lastReadoutAt = now
+      mapStore.setCameraReadout({
+        longitude: cameraState.longitude,
+        latitude: cameraState.latitude,
+        height: cameraState.height,
+        heading: cameraState.heading,
+        pitch: cameraState.pitch
+      })
+    }
   }
 
   /** 飞行到指定经纬度位置（带缓动） */
@@ -180,7 +222,8 @@ export function useCesium() {
         pixelOffset: new Cesium.Cartesian2(0, yOffset),
         horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
         verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-        disableDepthTestDistance: Number.POSITIVE_INFINITY
+        // 有限值：视角很远时让标签被地球遮挡，避免"穿透地球"显示
+        disableDepthTestDistance: 500000
       }
     })
     entities[id] = e

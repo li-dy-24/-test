@@ -1,44 +1,50 @@
 <!--
   CampusViewer — 数字校园主页面
 
-  架构：
-  - 顶部导航栏
-  - 左右分屏（2D OpenLayers + 3D Cesium）
-  - 左侧工具栏面板
-  - 底部状态栏
-  
-  composable 实例在此顶层创建，通过 provide 分发给子组件。
+  布局：
+  - TopBar        顶部菜单栏（品牌 / 模块导航 / 实时状态）
+  - stage         主舞台：左侧 2D OpenLayers + 右侧 3D Cesium 分屏
+  - RightSidebar  右侧菜单栏（图标导航条 + 功能抽屉）
+  - StatusBar     底部状态条（坐标读数 / 联动 / 投影）
 -->
 <template>
   <div class="campus-viewer">
-    <!-- 顶栏 -->
-    <header class="top-bar">
-      <h1>🏛️ 河南大学·数字校园三维展示</h1>
-      <span class="badge">Vue3 + Cesium + OpenLayers</span>
-    </header>
+    <TopBar
+      :active="active"
+      :sync-enabled="mapStore.syncEnabled"
+      @toggle-sync="mapStore.syncEnabled = !mapStore.syncEnabled"
+      @update:active="selectModule"
+    />
 
-    <!-- 主体：左右分屏 -->
-    <main class="main-area">
-      <SplitPane :default-ratio="0.35">
+    <main class="stage">
+      <SplitPane :default-ratio="0.34">
         <template #left>
           <OLMap ref="olMapRef" />
         </template>
+
         <template #right>
           <CesiumViewer ref="cesiumRef" />
-          <SidePanel />
         </template>
       </SplitPane>
+
+      <RightSidebar
+        v-model="active"
+        v-model:open="drawerOpen"
+        @home="goHome"
+      />
     </main>
 
-    <!-- 底部状态栏 -->
     <StatusBar />
   </div>
 </template>
 
 <script setup>
 import { ref, watch, onUnmounted, provide } from 'vue'
+import { useMapStore } from '@/stores/mapStore'
+import { HOME_VIEW } from '@/utils/cesium-config'
+import TopBar from '@/components/layout/TopBar.vue'
 import SplitPane from '@/components/layout/SplitPane.vue'
-import SidePanel from '@/components/layout/SidePanel.vue'
+import RightSidebar from '@/components/layout/RightSidebar.vue'
 import StatusBar from '@/components/layout/StatusBar.vue'
 import OLMap from '@/components/ol/OLMap.vue'
 import CesiumViewer from '@/components/cesium/CesiumViewer.vue'
@@ -47,8 +53,14 @@ import { useMeasure } from '@/composables/useMeasure'
 import { useViewshed } from '@/composables/useViewshed'
 import { use2D3DSync } from '@/composables/use2D3DSync'
 
+const mapStore = useMapStore()
+
 const olMapRef = ref(null)
 const cesiumRef = ref(null)
+
+// 右侧菜单栏状态
+const active = ref('buildings')
+const drawerOpen = ref(true)
 
 // ===== 工具 composable =====
 const getViewer = () => cesiumRef.value?.cesium?.getViewer?.()
@@ -56,23 +68,42 @@ const flight = useFlight(getViewer)
 const measure = useMeasure(getViewer)
 const viewshed = useViewshed(getViewer)
 
-// provide 工具
-const providedViewer = ref(null)
-provide('cesiumViewer', providedViewer)
+provide('cesiumViewer', ref(null))
 provide('flight', flight)
 provide('measure', measure)
 provide('viewshed', viewshed)
 
+// ===== 顶部导航 → 切换右侧模块 =====
+function selectModule(key) {
+  if (active.value === key && drawerOpen.value) {
+    drawerOpen.value = false // 再次点击当前模块 → 收起抽屉
+    return
+  }
+  active.value = key
+  drawerOpen.value = true
+}
+
+// ===== 回到校园 =====
+function goHome() {
+  const c = cesiumRef.value?.cesium
+  if (!c) return
+  c.flyTo(
+    HOME_VIEW.longitude,
+    HOME_VIEW.latitude,
+    HOME_VIEW.height,
+    HOME_VIEW.heading,
+    HOME_VIEW.pitch,
+    0,
+    1.8
+  )
+}
+
 // ===== 2D/3D 联动同步 =====
 const sync = use2D3DSync()
 
-// 等 Cesium Viewer 就绪后，绑定双向同步
 watch(() => cesiumRef.value?.cesium?.getViewer?.(), (v) => {
   if (!v) return
   window.__cesiumViewer = v
-  providedViewer.value = v
-
-  // 绑定 2D → 3D
   const olMap = olMapRef.value?.getMap?.()
   if (olMap) {
     sync.bindOL2Cesium(olMap, cesiumRef.value?.cesium)
@@ -81,7 +112,6 @@ watch(() => cesiumRef.value?.cesium?.getViewer?.(), (v) => {
   }
 })
 
-// OLMap 就绪后也尝试绑定
 watch(() => olMapRef.value?.getMap?.(), (olMap) => {
   const v = cesiumRef.value?.cesium?.getViewer?.()
   if (!olMap || !v) return
@@ -94,13 +124,19 @@ onUnmounted(() => { window.__cesiumViewer = null })
 </script>
 
 <style scoped>
-.campus-viewer { width:100%; height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+.campus-viewer {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg-0);
+}
 
-.top-bar { height:44px; background:linear-gradient(135deg,#036,#04d); color:#fff;
-  display:flex; justify-content:space-between; align-items:center; padding:0 16px;
-  z-index:500; flex-shrink:0; }
-.top-bar h1 { font-size:15px; font-weight:600; margin:0; }
-.badge { background:rgba(255,255,255,.15); padding:2px 8px; border-radius:4px; font-size:10px; }
-
-.main-area { flex:1; overflow:hidden; }
+.stage {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+}
 </style>

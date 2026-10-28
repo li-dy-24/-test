@@ -1,31 +1,61 @@
-<!-- 视域分析面板 — 通过 inject 获取 useViewshed 实例 -->
+<!-- ViewshedTool — 视域分析面板 -->
 <template>
   <div class="viewshed-panel">
-    <h4>👁️ 视域分析</h4>
-    <p class="desc">点击地图选择一个观察点，分析从该点出发的可见范围。<br>🟢 绿色 = 可见  |  🔴 红色 = 被遮挡</p>
+    <p class="desc">
+      选定观察点后，系统按 360° 射线投射计算可见范围，绿色为可见、红色为遮挡。
+    </p>
 
-    <button class="pick-btn" @click="pickPoint">
-      {{ observer ? '✅ 已选点（点击重选）' : '🖱️ 点击地图选点' }}
+    <!-- 观察点 -->
+    <div class="section-label">观察点</div>
+    <button class="tech-btn pick-btn" :class="{ picked: !!observer }" @click="pickPoint">
+      <TechIcon name="target" :size="14" />
+      {{ observer ? '重新选取观察点' : '在三维场景中选点' }}
     </button>
 
-    <div v-if="observer" class="coords">
-      经度:{{ observer.longitude.toFixed(5) }}  纬度:{{ observer.latitude.toFixed(5) }}
+    <div v-if="observer" class="coord-box">
+      <div class="coord-row"><em>经度</em><b>{{ observer.longitude.toFixed(6) }}</b></div>
+      <div class="coord-row"><em>纬度</em><b>{{ observer.latitude.toFixed(6) }}</b></div>
+      <div class="coord-row"><em>视高</em><b>{{ observer.height.toFixed(1) }}<i>m</i></b></div>
     </div>
 
-    <div class="param">
-      分析半径: <b>{{ radius }}m</b>
-      <input type="range" v-model.number="radius" min="100" max="1000" step="50">
+    <!-- 参数 -->
+    <div class="section-label">分析半径</div>
+    <div class="param-box">
+      <div class="param-head">
+        <span>RADIUS</span>
+        <b>{{ radius }} <i>m</i></b>
+      </div>
+      <input type="range" v-model.number="radius" min="100" max="1000" step="50" />
     </div>
 
-    <button class="run-btn" :disabled="!observer || viewshed.isAnalyzing.value" @click="doAnalyze">
-      {{ viewshed.isAnalyzing.value ? '分析中...' : '🔍 开始分析' }}
+    <button
+      class="tech-btn run-btn"
+      :disabled="!observer || viewshed.isAnalyzing.value"
+      @click="doAnalyze"
+    >
+      <TechIcon name="scan" :size="14" />
+      {{ viewshed.isAnalyzing.value ? '射线计算中…' : '开始视域分析' }}
     </button>
 
-    <button v-if="viewshed.viewshedResult.value" class="clear-btn" @click="viewshed.clear()">清除结果</button>
+    <button v-if="viewshed.viewshedResult.value" class="tech-btn clear-btn" @click="viewshed.clear()">
+      清除结果
+    </button>
 
-    <div v-if="viewshed.viewshedResult.value" class="summary">
-      <span class="s s-g">🟢 可见点: {{ viewshed.viewshedResult.value.visible?.length || 0 }}</span>
-      <span class="s s-r">🔴 遮挡点: {{ viewshed.viewshedResult.value.hidden?.length || 0 }}</span>
+    <!-- 结果 -->
+    <div v-if="viewshed.viewshedResult.value" class="result-box">
+      <div class="section-label">分析结果</div>
+      <div class="result-grid">
+        <div class="result-cell ok">
+          <span class="cell-bar"></span>
+          <em>可见</em>
+          <b>{{ viewshed.viewshedResult.value.visible?.length || 0 }}</b>
+        </div>
+        <div class="result-cell bad">
+          <span class="cell-bar"></span>
+          <em>遮挡</em>
+          <b>{{ viewshed.viewshedResult.value.hidden?.length || 0 }}</b>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -34,14 +64,9 @@
 import { ref, inject } from 'vue'
 import * as Cesium from 'cesium'
 import { VIEWSHED_CONFIG } from '@/utils/cesium-config'
+import TechIcon from '@/components/ui/TechIcon.vue'
 
 const viewshed = inject('viewshed')
-const getViewer = () => {
-  // 从根组件通过 window 或其他方式获取 viewer
-  // 我们通过 inject 获取 viewer 的 getter
-  return window.__cesiumViewer
-}
-
 const observer = ref(null)
 const radius = ref(VIEWSHED_CONFIG.maxDistance)
 
@@ -73,20 +98,121 @@ function doAnalyze() {
 </script>
 
 <style scoped>
-h4 { margin:0 0 6px; font-size:13px; color:#036; }
-.desc { font-size:11px; color:#888; margin:0 0 10px; line-height:1.5; }
-.pick-btn { width:100%; padding:8px; border:1px dashed #ccc; border-radius:4px;
-  background:#f8f8f8; font-size:11px; cursor:pointer; margin-bottom:8px; }
-.pick-btn:hover { border-color:#036; color:#036; }
-.coords { font-size:10px; color:#666; font-family:monospace; background:#f8f8f8;
-  padding:4px 8px; border-radius:3px; margin-bottom:8px; }
-.param { margin-bottom:10px; font-size:11px; color:#555; }
-.param input { width:100%; }
-.run-btn { width:100%; padding:8px; border:none; border-radius:4px;
-  background:#036; color:#fff; font-size:12px; cursor:pointer; margin-bottom:4px; }
-.run-btn:disabled { background:#ccc; cursor:not-allowed; }
-.clear-btn { width:100%; padding:6px; border:1px solid #ddd; border-radius:4px;
-  background:#fff; font-size:11px; cursor:pointer; color:#999; margin-bottom:8px; }
-.summary { display:flex; gap:12px; font-size:11px; }
-.s { display:flex; align-items:center; gap:4px; }
+.viewshed-panel { display: flex; flex-direction: column; gap: 11px; }
+
+.desc { font-size: 11px; line-height: 1.7; color: var(--text-dim); }
+
+.section-label {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--text-mute);
+  font-family: var(--mono);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+.pick-btn {
+  width: 100%;
+  padding: 10px;
+  border-style: dashed;
+  border-color: rgba(70, 190, 255, 0.3);
+}
+.pick-btn.picked {
+  border-style: solid;
+  color: var(--cyan);
+  border-color: rgba(53, 224, 255, 0.42);
+  background: rgba(53, 224, 255, 0.08);
+}
+
+.coord-box {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.coord-row {
+  background: rgba(6, 14, 24, 0.85);
+  padding: 7px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.coord-row em { font-style: normal; font-size: 9px; color: var(--text-mute); }
+.coord-row b {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: #d6ecff;
+}
+.coord-row b i { font-style: normal; font-size: 8.5px; color: var(--text-mute); margin-left: 1px; }
+
+.param-box {
+  padding: 10px 11px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(10, 20, 34, 0.5);
+}
+.param-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.param-head span {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--text-mute);
+}
+.param-head b {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--cyan);
+  font-weight: 500;
+}
+.param-head b i { font-style: normal; font-size: 9px; color: var(--text-mute); }
+
+.run-btn { width: 100%; padding: 10px; }
+.run-btn:not(:disabled):hover {
+  color: var(--cyan);
+  border-color: var(--line-strong);
+}
+.clear-btn { width: 100%; }
+.clear-btn:hover { color: var(--red); border-color: rgba(255, 95, 112, 0.4); }
+
+.result-box { display: flex; flex-direction: column; gap: 8px; }
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.result-cell {
+  position: relative;
+  padding: 10px 11px;
+  border-radius: 6px;
+  background: rgba(10, 20, 34, 0.6);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+.result-cell em { font-style: normal; font-size: 9.5px; color: var(--text-mute); letter-spacing: 0.08em; }
+.result-cell b {
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 600;
+}
+.result-cell .cell-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+}
+.result-cell.ok b { color: var(--green); }
+.result-cell.ok .cell-bar { background: var(--green); box-shadow: 0 0 10px var(--green); }
+.result-cell.bad b { color: var(--red); }
+.result-cell.bad .cell-bar { background: var(--red); box-shadow: 0 0 10px var(--red); }
 </style>

@@ -1,13 +1,27 @@
-<!-- OLMap — 2D OpenStreetMap：点击显示坐标 -->
+<!-- OLMap — 二维平面场景（OpenLayers + OSM 暗色化） -->
 <template>
   <div class="ol-map">
     <div ref="mapContainer" class="ol-container"></div>
 
-    <!-- 左下角坐标面板：鼠标移动实时显示 -->
-    <div class="coord-panel-2d">
-      <div class="coord-line">经度 <span>{{ coords.lon }}</span></div>
-      <div class="coord-line">纬度 <span>{{ coords.lat }}</span></div>
-      <div class="coord-crs">EPSG:3857 / EPSG:4326</div>
+    <!-- 暗色化 + 青色扫描网底纹 -->
+    <div class="map-tint"></div>
+
+    <!-- 场景标识 -->
+    <div class="scene-tag">
+      <i class="dot"></i>
+      <b>二维平面</b>
+      <i>MAP · 02</i>
+    </div>
+
+    <!-- 四角定位括号 -->
+    <div class="hud-frame">
+      <span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- 右下角比例尺化刻度（纯装饰，科技感） -->
+    <div class="map-scale">
+      <span class="scale-label">ZOOM {{ zoomLevel.toFixed(1) }}</span>
+      <div class="scale-bar"><i></i></div>
     </div>
   </div>
 </template>
@@ -24,13 +38,20 @@ import { useMapStore } from '@/stores/mapStore'
 const mapStore = useMapStore()
 const mapContainer = ref(null)
 const olMap = ref(null)
-const coords = ref({ lon: '--', lat: '--' })
-const center = ref([114.348, 34.789])
+const zoomLevel = ref(16)
+
+let hoverThrottle = 0
 
 onMounted(() => {
   const map = new Map({
     target: mapContainer.value,
-    layers: [new TileLayer({ source: new OSM() })],
+    // 关闭默认控件：缩放按钮 / 版权水印 / 旋转罗盘
+    controls: [],
+    layers: [
+      new TileLayer({
+        source: new OSM({ crossOrigin: 'anonymous' })
+      })
+    ],
     view: new View({
       center: fromLonLat([114.348, 34.789]),
       zoom: 16,
@@ -39,17 +60,25 @@ onMounted(() => {
     })
   })
 
-  // 鼠标移动实时显示坐标
+  // 指针移动 → 写入全局 store（底部状态条显示）
   map.on('pointermove', evt => {
+    const now = performance.now()
+    if (now - hoverThrottle < 60) return
+    hoverThrottle = now
     const [lon, lat] = toLonLat(evt.coordinate)
-    coords.value = { lon: lon.toFixed(6), lat: lat.toFixed(6) }
+    mapStore.setHoverCoord({ lon: lon.toFixed(6), lat: lat.toFixed(6) })
   })
 
-  // 移动时更新中心
+  map.getViewport().addEventListener('mouseleave', () => {
+    mapStore.setHoverCoord(null)
+  })
+
+  // 视图变化 → 同步 store
   map.on('moveend', () => {
-    const [lon, lat] = toLonLat(map.getView().getCenter())
-    center.value = [lon, lat]
-    mapStore.updateOLView([lon, lat], map.getView().getZoom())
+    const view = map.getView()
+    const [lon, lat] = toLonLat(view.getCenter())
+    zoomLevel.value = view.getZoom()
+    mapStore.updateOLView([lon, lat], view.getZoom())
   })
 
   olMap.value = map
@@ -68,23 +97,82 @@ watch(() => mapStore.olCenter, ([lon, lat]) => {
 defineExpose({ getMap: () => olMap.value })
 
 onUnmounted(() => {
-  if (olMap.value) { olMap.value.setTarget(undefined); olMap.value = null }
+  if (olMap.value) {
+    olMap.value.setTarget(undefined)
+    olMap.value = null
+  }
 })
 </script>
 
 <style scoped>
-.ol-map { position:relative; width:100%; height:100%; overflow:hidden; }
-.ol-container { width:100%; height:100%; }
+.ol-map {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #05090f;
+}
 
-/* 左下角坐标面板（浅色背景） */
-.coord-panel-2d {
-  position: absolute; bottom: 8px; left: 8px; z-index: 1000;
-  background: rgba(0,0,0,.78); color: #0ff; font-family: 'Courier New', monospace;
-  padding: 10px 14px; border-radius: 8px; min-width: 260px;
-  border: 1px solid rgba(0,255,255,.3);
+/* OSM 亮度反相 → 暗色底图 */
+.ol-container {
+  width: 100%;
+  height: 100%;
+  filter: invert(1) hue-rotate(185deg) brightness(0.95) contrast(1.05) saturate(0.35);
+}
+
+/* 青色叠色 + 中心暗角 */
+.map-tint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(53, 224, 255, 0.06), transparent 62%),
+    linear-gradient(180deg, rgba(4, 10, 18, 0.42), rgba(4, 10, 18, 0.18) 45%, rgba(4, 10, 18, 0.55));
+  z-index: 3;
+}
+
+.scene-tag .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+/* 比例尺装饰 */
+.map-scale {
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
   pointer-events: none;
 }
-.coord-panel-2d .coord-line { font-size: 13px; margin-bottom: 3px; display: flex; justify-content: space-between; }
-.coord-panel-2d .coord-line span { color: #fff; }
-.coord-panel-2d .coord-crs { font-size: 10px; color: rgba(0,255,255,.5); margin-top: 4px; padding-top: 4px; border-top: 1px solid rgba(0,255,255,.2); }
+.scale-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--cyan);
+  opacity: 0.75;
+}
+.scale-bar {
+  width: 72px;
+  height: 5px;
+  border-left: 1px solid rgba(53, 224, 255, 0.6);
+  border-right: 1px solid rgba(53, 224, 255, 0.6);
+  border-bottom: 1px solid rgba(53, 224, 255, 0.6);
+  position: relative;
+}
+.scale-bar i {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(53, 224, 255, 0.4);
+}
 </style>
